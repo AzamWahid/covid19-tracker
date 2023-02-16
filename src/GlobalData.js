@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -34,9 +34,15 @@ const GlobalData = () => {
         setloadData(true)
         const response = await fetch('https://api.covid19api.com/summary');
         const data = await response.json();
-        setGlobalData(data.Global);
-        setloadData(false)
+        if (data && data.Global) {
+          setGlobalData(data.Global);
+          setloadData(false)
+        } else {
+          throw new Error('Invalid data returned from the API');
+        }
       } catch (error) {
+        // Handle error
+        console.error(error);
       }
     }
     fetchData();
@@ -139,7 +145,7 @@ const GlobalData = () => {
                 Recovered Data as of today
               </Typography>
             </Paper>
-            
+
             <Paper elevation={3} style={{ color: 'red' }}>
               <Typography variant="h4" gutterBottom>
                 <NumericFormat value={globalData && globalData.TotalDeaths} displayType={'text'} thousandSeparator="," />
